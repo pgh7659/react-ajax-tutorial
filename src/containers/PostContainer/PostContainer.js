@@ -3,7 +3,24 @@ import { PostWrapper, Navigate, Post } from '../../component';
 import * as service from '../../service/post';
 
 class PostContainer extends Component {
+  constructor() {
+    super();
+    this.state={
+      postId : 1,
+      fetching : false,
+      post : {
+        title : null,
+        body : null
+      },
+      comments : []
+    };
+  }
+
   fetchPostInfo = async (postId) => {
+    this.setState({
+      fetching : true // Requesting
+    });
+
     // 두번의 비동기 요청을 차례로 하므로 비효율적
     // const post = await service.getPost(postId);
     // console.log(post);
@@ -18,6 +35,19 @@ class PostContainer extends Component {
       service.getComments(postId)
     ]);
 
+    const { title, body } = info[0].data;
+    const comments = info[1].data;
+
+    this.setState({
+      postId,
+      post : {
+        title,
+        body
+      },
+      comments,
+      fetching : false // done!
+    });
+
     console.log(info);
   }
 
@@ -26,10 +56,19 @@ class PostContainer extends Component {
   }
 
   render() {
+    const { postId, post, comments, fetching } = this.state;
     return (
       <PostWrapper>
-        <Navigate/>
-        <Post />
+        <Navigate
+          // 데이터를 불러오는 중일 땐 버튼을 비활성화 하도록 fetching 값을 disabled 로 전달하도록 설정
+          postId = {postId}
+          disabled = {fetching}
+        />
+        <Post
+          title = {post.title}
+          body = {post.body}
+          comments = {comments}
+        />
       </PostWrapper>
     );
   }

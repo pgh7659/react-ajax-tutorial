@@ -2,7 +2,7 @@ import React from 'react';
 import {Button, Icon} from 'semantic-ui-react';
 import './Navigate.css';
 
-const Navigate = () => (
+const Navigate = ({ postId, disabled }) => (
   <div className="Navigate">
     <Button
         color="teal"
@@ -11,7 +11,7 @@ const Navigate = () => (
         labelPosition="left"
       />
     <div className="Navigate-page-num">
-      1
+        {postId}
     </div>
     <Button
         color="teal"
